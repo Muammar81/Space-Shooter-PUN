@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 
-public class PlayerShooting : MonoBehaviour
+public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField] private InputActionReference fireButton;
     [SerializeField] private GameObject bulletPrefab;
@@ -13,8 +13,11 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private List<Transform> firePoints;
     [SerializeField] private bool continousShooting;
     [SerializeField] private float fireDelay = 02f;
+    [SerializeField] private AudioClip sFX;
+
 
     private static ObjectPool<GameObject> pool;
+    private AudioSource audiouSource;
     private float timer;
 
     private void OnEnable() => fireButton.action.performed += ctx => Fire();
@@ -28,6 +31,9 @@ public class PlayerShooting : MonoBehaviour
         obj => obj.gameObject.SetActive(false),
         obj => Destroy(obj.gameObject),
         false,preWarmAmount);
+
+        audiouSource = GetComponent<AudioSource>();
+        audiouSource.playOnAwake = false;
     }
     private void Update()
     {
@@ -47,6 +53,7 @@ public class PlayerShooting : MonoBehaviour
     private GameObject Init(GameObject bulletPrefab)
     {
         var bullet = Instantiate(bulletPrefab);
+        bullet.transform.parent = this.transform;
         return bullet;
     }
 
@@ -74,6 +81,7 @@ public class PlayerShooting : MonoBehaviour
 
     private void Fire()
     {
+        audiouSource.PlayOneShot(sFX);
         for (int i = 0; i < firePoints.Count; i++)
         {
             var bullet = pool.Get();
