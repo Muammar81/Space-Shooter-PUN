@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ScreenBoundaries : MonoBehaviour
+public class PlayerScreenBoundaries : MonoBehaviour
 {
     private Vector2 screenBounds;
     private float objectWidth;
