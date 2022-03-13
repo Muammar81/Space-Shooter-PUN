@@ -26,6 +26,12 @@ public class PlayerShooting : MonoBehaviour
         false, preWarmAmount);
     }
 
+    private GameObject Init(GameObject bulletPrefab)
+    {
+        var bullet = Instantiate(bulletPrefab);
+        return bullet;
+    }
+
     /// <summary>
     /// Returns Pooled Object to Pool
     /// </summary>
@@ -44,11 +50,7 @@ public class PlayerShooting : MonoBehaviour
         pool.Release(pooledObject);
     }
 
-    private GameObject Init(GameObject bulletPrefab)
-    {
-        var bullet = Instantiate(bulletPrefab);
-        return bullet;
-    }
+
 
     private void OnShooting(InputAction.CallbackContext obj)
     {
