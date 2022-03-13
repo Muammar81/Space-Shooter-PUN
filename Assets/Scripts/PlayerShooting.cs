@@ -10,12 +10,15 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private InputActionReference fireButton;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private int preWarmAmount;
-    [SerializeField] List<Transform> firePoints;
+    [SerializeField] private List<Transform> firePoints;
+    [SerializeField] private bool continousShooting;
+    [SerializeField] private float fireDelay = 02f;
 
     private static ObjectPool<GameObject> pool;
+    private float timer;
 
-    private void OnEnable() => fireButton.action.performed += OnShooting;
-    private void OnDisable() => fireButton.action.performed -= OnShooting;
+    private void OnEnable() => fireButton.action.performed += ctx => Fire();
+    private void OnDisable() => fireButton.action.performed -= ctx => Fire();
 
     private void Start()
     {
@@ -26,6 +29,20 @@ public class PlayerShooting : MonoBehaviour
         obj => Destroy(obj.gameObject),
         false,preWarmAmount);
     }
+    private void Update()
+    {
+        if (continousShooting && CanFire)
+        {
+            timer = 0;
+            Fire();
+        }
+
+        timer += Time.deltaTime;
+    }
+
+    private bool CanFire=> 
+        fireButton.action.IsPressed() && 
+        timer >= fireDelay;
 
     private GameObject Init(GameObject bulletPrefab)
     {
@@ -55,7 +72,7 @@ public class PlayerShooting : MonoBehaviour
         pool.Release(objectToReturn);
     }
 
-    private void OnShooting(InputAction.CallbackContext obj)
+    private void Fire()
     {
         for (int i = 0; i < firePoints.Count; i++)
         {
