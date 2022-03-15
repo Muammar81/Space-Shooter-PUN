@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -5,22 +6,23 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 
-public class PlayerWeapon : MonoBehaviour
+public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] private InputActionReference fireButton;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private int preWarmAmount;
-    [SerializeField] private List<Transform> firePoints;
     [SerializeField] private bool continousShooting;
     [SerializeField] private float fireDelay = 02f;
     [SerializeField] private AudioClip sFX;
 
-
+    [SerializeField] private List<Transform> firePoints;
     private static ObjectPool<GameObject> pool;
-    private AudioSource audiouSource;
     private float timer;
 
+    public static Action<AudioClip> OnFire = delegate { };
+
     private void OnEnable() => fireButton.action.performed += ctx => Fire();
+
     private void OnDisable() => fireButton.action.performed -= ctx => Fire();
 
     private void Start()
@@ -31,13 +33,10 @@ public class PlayerWeapon : MonoBehaviour
         obj => obj.gameObject.SetActive(false),
         obj => Destroy(obj.gameObject),
         false,preWarmAmount);
-
-        audiouSource = GetComponent<AudioSource>();
-        audiouSource.playOnAwake = false;
     }
     private void Update()
     {
-        if (continousShooting && CanFire)
+        if (CanFire)
         {
             timer = 0;
             Fire();
@@ -46,9 +45,9 @@ public class PlayerWeapon : MonoBehaviour
         timer += Time.deltaTime;
     }
 
-    private bool CanFire=> 
-        fireButton.action.IsPressed() && 
-        timer >= fireDelay;
+    private bool CanFire =>
+            fireButton.action.IsPressed()  && timer >= fireDelay;
+
 
     private GameObject Init(GameObject bulletPrefab)
     {
@@ -81,13 +80,14 @@ public class PlayerWeapon : MonoBehaviour
 
     private void Fire()
     {
-        audiouSource.PlayOneShot(sFX);
         for (int i = 0; i < firePoints.Count; i++)
         {
             var bullet = pool.Get();
             bullet.transform.position = firePoints[i].position;
             bullet.transform.rotation = firePoints[i].rotation;
         }
+
+        OnFire?.Invoke(sFX);
     }
 }
 

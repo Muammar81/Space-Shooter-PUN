@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
         lifeTime += Time.deltaTime;
 
         if (lifeTime > maxLifeTime)
-            PlayerWeapon.ReturnToPool(this.gameObject);
+            PlayerShooting.ReturnToPool(this.gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
 
         if (FX != null)
             FX.Play();
-        PlayerWeapon.ReturnToPool(this.gameObject);
+        PlayerShooting.ReturnToPool(this.gameObject);
     }
 
 }
