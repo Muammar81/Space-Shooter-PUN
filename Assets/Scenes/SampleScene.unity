@@ -341,13 +341,14 @@ GameObject:
   - component: {fileID: 324353658}
   - component: {fileID: 324353657}
   - component: {fileID: 324353659}
+  - component: {fileID: 324353667}
+  - component: {fileID: 324353665}
+  - component: {fileID: 324353666}
   - component: {fileID: 324353655}
   - component: {fileID: 324353660}
   - component: {fileID: 324353662}
   - component: {fileID: 324353663}
-  - component: {fileID: 324353665}
-  - component: {fileID: 324353666}
-  - component: {fileID: 324353667}
+  - component: {fileID: 324353668}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -677,6 +678,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &324353668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324353654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e33659eff178824a8aadbaae40d4717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FX: {fileID: 8008660526312145424, guid: ec9d8d8cb27f952429823a928294c53e, type: 3}
+  sFX: {fileID: 8300000, guid: e28b5cc2172cbd94397ee301a28b8229, type: 3}
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 768
 --- !u!1 &440302506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,7 +1166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   astroidPrefab: {fileID: 6044752935596213661, guid: b96efd1d633dfb941bcb9b375e913037, type: 3}
   preWarmAmount: 10
-  spawnDelay: 3
+  spawnDelay: 1
 --- !u!4 &1108926731
 Transform:
   m_ObjectHideFlags: 0
@@ -1157,7 +1175,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108926729}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.71, y: -0.14, z: 0}
+  m_LocalPosition: {x: -11.51, y: -0.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1177,7 +1195,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.7824669, y: 0.21339989}
+  m_Offset: {x: -0.4976387, y: 0.21339989}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1188,7 +1206,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.5649338, y: 9.678263}
+  m_Size: {x: 5.125145, y: 9.678263}
   m_EdgeRadius: 0
 --- !u!1 &1162206173
 GameObject:

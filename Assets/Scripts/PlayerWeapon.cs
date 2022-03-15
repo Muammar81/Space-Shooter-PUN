@@ -67,7 +67,7 @@ public class PlayerWeapon : MonoBehaviour
         if (delay > 0)
         {
             //Disable Visuals
-            var rends = objectToReturn.GetComponents<Renderer>().ToList();
+            var rends = objectToReturn.GetComponentsInChildren<Renderer>(true).ToList();
             rends.ForEach(r => r.enabled = false);
 
             var endTime = Time.time + delay;
