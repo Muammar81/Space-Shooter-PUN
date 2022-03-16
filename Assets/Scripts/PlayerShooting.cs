@@ -20,6 +20,7 @@ public class PlayerShooting : MonoBehaviour
     private float timer;
 
     public static Action<AudioClip> OnFire = delegate { };
+    private Transform parentTransform;
 
     private void OnEnable() => fireButton.action.performed += ctx => Fire();
 
@@ -52,7 +53,12 @@ public class PlayerShooting : MonoBehaviour
     private GameObject Init(GameObject bulletPrefab)
     {
         var bullet = Instantiate(bulletPrefab);
-        bullet.transform.parent = this.transform;
+
+        parentTransform = parentTransform == null ?
+                          new GameObject($"{name} - Pool").transform : 
+                          parentTransform;
+
+        bullet.transform.parent = parentTransform;
         return bullet;
     }
 

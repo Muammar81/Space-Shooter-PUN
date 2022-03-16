@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 742f979f2d5404447b612d8051f71ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchSpeed: 30
+  launchSpeed: 10
   maxLifeTime: 2
   FX: {fileID: 834297116}
   ignoredLayers:
