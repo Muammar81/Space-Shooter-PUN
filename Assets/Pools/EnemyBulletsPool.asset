@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 206a035dcb6fcec49bb97d49fb799568, type: 3}
-  m_Name: PlayerBulletsPool
+  m_Name: EnemyBulletsPool
   m_EditorClassIdentifier: 
-  prefab: {fileID: 10810795521789317, guid: 3cd94dd222f72e249a48ff1f30b8ad78, type: 3}
+  prefab: {fileID: 10810795521789317, guid: 56db26c9e7108c64c8866e536f3adff5, type: 3}
   prewarmCount: 60

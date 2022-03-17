@@ -12,7 +12,7 @@ namespace PanettoneGames
         [SerializeField] int prewarmCount = 20;
 
         private Queue<GameObject> objects = new Queue<GameObject>();
-        private Transform poolContainer;
+        private Transform poolContainer = null;
         /// <summary>
         /// Prewarms the pool with the specified prewarm Count on the GameObjectPool Scriptable Object
         /// </summary>

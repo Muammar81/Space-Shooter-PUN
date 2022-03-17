@@ -25,7 +25,9 @@ public class Bullet : MonoBehaviour, PanettoneGames.IGameObjectPooled
         lifeTime += Time.deltaTime;
 
         if (lifeTime > maxLifeTime)
+        {
             Pool.ReturnToPool(this.gameObject);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
