@@ -1,14 +1,17 @@
 using UnityEngine;
+using PanettoneGames;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour, PanettoneGames.IGameObjectPooled
 {
     [SerializeField] [Range(10, 100)] float launchSpeed = 30f;
-    [SerializeField] [Range(1, 10)] private float maxLifeTime = 2f;
+    [SerializeField] [Tooltip("In Seconds")] [Range(1, 10)] private float maxLifeTime = 2f;
     [SerializeField] [Tooltip("Remember to turn off particle play on awake")] ParticleSystem FX;
     [SerializeField] [Tooltip("Typically, player's layer")] private LayerMask ignoredLayers;
 
     private float lifeTime;
     private Renderer rend;
+
+    public GameObjectPool Pool { get; set; }
 
     private void OnEnable()
     {
@@ -22,7 +25,7 @@ public class Bullet : MonoBehaviour
         lifeTime += Time.deltaTime;
 
         if (lifeTime > maxLifeTime)
-            PlayerShooting.ReturnToPool(this.gameObject);
+            Pool.ReturnToPool(this.gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -32,7 +35,7 @@ public class Bullet : MonoBehaviour
 
         if (FX != null)
             FX.Play();
-        PlayerShooting.ReturnToPool(this.gameObject);
+        Pool.ReturnToPool(this.gameObject);
     }
 
 }

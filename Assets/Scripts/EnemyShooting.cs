@@ -1,16 +1,10 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine;
 using PanettoneGames;
 
-public class PlayerShooting : ShootingBehaviour
+public class EnemyShooting : ShootingBehaviour
 {
-    [SerializeField] private InputActionReference fireButton;
-    [SerializeField] private bool continousShooting;
     [SerializeField] private GameObjectPool pool;
     private void Awake() => pool.Prewarm();
-    private void OnEnable() => fireButton.action.performed += ctx => Fire();
-    private void OnDisable() => fireButton.action.performed -= ctx => Fire();
-
     private void Update()
     {
         if (CanFire)
@@ -21,8 +15,7 @@ public class PlayerShooting : ShootingBehaviour
         timer += Time.deltaTime;
     }
 
-    private bool CanFire =>
-            fireButton.action.IsPressed() && timer >= fireDelay;
+    private bool CanFire => timer >= fireDelay;
     protected void Fire()
     {
         for (int i = 0; i < firePoints.Count; i++)
@@ -31,7 +24,7 @@ public class PlayerShooting : ShootingBehaviour
             bullet.transform.position = firePoints[i].position;
             bullet.transform.rotation = firePoints[i].rotation;
         }
-        //OnFire?.Invoke(sFX);
+        OnFire?.Invoke(sFX);
     }
 }
 

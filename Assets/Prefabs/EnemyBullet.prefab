@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6591542603965636380}
   - component: {fileID: 1427678239}
   - component: {fileID: 3059736098285887229}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: EnemyBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8008660526312145429, guid: ec9d8d8cb27f952429823a928294c53e, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8008660526312145430, guid: ec9d8d8cb27f952429823a928294c53e, type: 3}
       propertyPath: m_RootOrder
