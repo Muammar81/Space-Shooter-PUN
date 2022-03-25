@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -8,24 +6,28 @@ using Random = UnityEngine.Random;
 public class AstroidSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject astroidPrefab;
-    [SerializeField] private int preWarmAmount;
-    [SerializeField] [Tooltip("in Seconds")] private float spawnDelay = 3f;
-
-    private static ObjectPool<GameObject> pool;
-    private Collider2D _collider;
+    [SerializeField] private float spawnDelay = 2f;
     private float timer;
+
+    private Collider2D _collider;
+    private static ObjectPool<GameObject> pool;
 
     private void Start()
     {
+        _collider = GetComponent<Collider2D>();
+        _collider.isTrigger = true;
+
         pool = new ObjectPool<GameObject>(() =>
         Init(astroidPrefab),
-        obj => obj.gameObject.SetActive(true),
-        obj => obj.gameObject.SetActive(false),
-        obj => Destroy(obj.gameObject),
-        false, preWarmAmount);
+        obj => obj.SetActive(true),
+        obj => obj.SetActive(false),
+        obj => Destroy(obj), false, 20
+        );
+    }
 
-        _collider= GetComponent<Collider2D>();
-        _collider.isTrigger = true;
+    public static void ReturnToPool(GameObject _gameObject)
+    {
+            pool.Release(_gameObject);
     }
 
     private GameObject Init(GameObject astroidPrefab)
@@ -35,78 +37,28 @@ public class AstroidSpawner : MonoBehaviour
         return astroid;
     }
 
-    /// <summary>
-    /// Returns Pooled Object to Pool
-    /// </summary>
-    /// <param name="objectToReturn">Object to return</param>
-    /// <param name="delay">delay in milliseconds</param>
-    internal static async void ReturnToPool(GameObject objectToReturn, float delay = 0)
+    void Update()
     {
-        if (delay > 0)
-        {
-            //Disable Visuals
-            var rends = objectToReturn.GetComponentsInChildren<Renderer>(true).ToList();
-            rends.ForEach(r => r.enabled = false);
-
-            var endTime = Time.time + delay;
-            while (Time.time < endTime)
-            {
-                await Task.Yield();
-            }
-        }
-        pool.Release(objectToReturn);
-    }
-
-
-    private void Update()
-    {
-        if (CanCanSpawn)
+        if (CanSpawn)
         {
             timer = 0;
             Spawn();
         }
-
         timer += Time.deltaTime;
     }
 
-    private bool CanCanSpawn => timer >= spawnDelay;
-
+    private bool CanSpawn => timer >= spawnDelay;
     private void Spawn()
     {
-        var astroid = pool.Get();
-        astroid.transform.position = GetRandomPosition();
-        astroid.transform.eulerAngles = GetRandomRotation();
+        var astroid =pool.Get();
+        astroid.transform.position = GetRandomPos();
     }
-    private Vector3 GetRandomPosition()
+
+    private Vector3 GetRandomPos()
     {
         float offsetX = Random.Range(-_collider.bounds.extents.x, _collider.bounds.extents.x);
         float offsetY = Random.Range(-_collider.bounds.extents.y, _collider.bounds.extents.y);
 
         return _collider.bounds.center + new Vector3(offsetX, offsetY, 0);
     }
-
-    private Vector3 GetRandomRotation()
-    {
-        Vector3 euler = transform.eulerAngles;
-        euler.z = Random.Range(-70f, -130f);
-        return euler;
-    }
-
-    public void OnDrawGizmos()
-    {
-        if (!_collider)
-            return;
-
-        var offset = _collider.offset;
-        var extents = _collider.bounds.size * 0.5f;
-        var verts = new Vector2[] {
-            transform.TransformPoint (new Vector2 (-extents.x, -extents.y) + offset),
-            transform.TransformPoint (new Vector2 (extents.x, -extents.y) + offset),
-            transform.TransformPoint (new Vector2 (extents.x, extents.y) + offset),
-            transform.TransformPoint (new Vector2 (-extents.x, extents.y) + offset) };
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(_collider.bounds.center, _collider.bounds.size);
-
-    }
-
 }

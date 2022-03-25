@@ -1,36 +1,22 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using PanettoneGames.Poseidon.Utilities;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField] private AudioClip bGM;
     private AudioSource audioSource;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = bGM;
-
-        if (audioSource != null)
-        {
-            audioSource?.Play();
-        }
+        audioSource.playOnAwake = false;
+        PooledShootingBehaviour.OnFire += Handle_OnFile;
     }
 
-    private void OnEnable()
+    private void OnDestroy() => PooledShootingBehaviour.OnFire -= Handle_OnFile;
+
+    private void Handle_OnFile(AudioClip sfx)
     {
-        PlayerShooting.OnFire += PlayerWeapon_OnFire;
+        audioSource?.PlayOneShot(sfx);
     }
-
-    private void PlayerWeapon_OnFire(AudioClip sfx)
-    {
-        audioSource.PlayOneShot(sfx);
-    }
-
-
-
-
 }

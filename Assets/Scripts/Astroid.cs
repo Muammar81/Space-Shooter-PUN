@@ -2,39 +2,26 @@ using UnityEngine;
 
 public class Astroid : MonoBehaviour
 {
-    [SerializeField] [Tooltip("SFX particle")] ParticleSystem FX;
-    [SerializeField] [Tooltip("Typically, player's layer")] private LayerMask hitLayers;
-    [SerializeField] private float minSpeed = 0.1f;
-    [SerializeField] private float maxSpeed = 3f;
-
+    [SerializeField] private float launchSpeed = 5f;
     private Camera cam;
-    private float launchSpeed;
-    [SerializeField] private float offScreenMargin;
+    private float offset = 300f;
 
-    private void OnEnable()
+    private void Awake() => cam = Camera.main;
+    private void Update()
     {
-        cam = Camera.main;
-        launchSpeed = Random.Range(minSpeed, maxSpeed);
-        FX.playOnAwake = false;
-    }
-
-    void Update()
-    {
-        transform.Translate(Vector2.up * launchSpeed * Time.deltaTime);
+        transform.Translate(Vector2.right * launchSpeed * Time.deltaTime);
 
         if (!IsInScreen(transform))
-            AstroidSpawner.ReturnToPool(this.gameObject);
+            AstroidSpawner.ReturnToPool(gameObject);
     }
-
 
     private bool IsInScreen(Transform t)
     {
-        float offset = 300;
-        var screenPos = cam.WorldToScreenPoint(t.position );
+        var screenPos = cam.WorldToScreenPoint(t.position);
 
         return screenPos.x > 0f &&
-               screenPos.x  < Screen.width +offset &&
-               screenPos.y > 0f &&
-               screenPos.y  < Screen.height;
+                screenPos.x < Screen.width + offset &&
+                screenPos.y > 0f &&
+                screenPos.y < Screen.height;
     }
 }

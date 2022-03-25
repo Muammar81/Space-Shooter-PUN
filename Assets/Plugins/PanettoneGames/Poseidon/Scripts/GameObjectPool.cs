@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace PanettoneGames
+namespace PanettoneGames.Poseidon
 {
     [CreateAssetMenu(fileName = "New GameObject Pool", menuName = "Poseidon/GameObject Pool")]
     public class GameObjectPool : ScriptableObject
@@ -12,14 +12,29 @@ namespace PanettoneGames
         [SerializeField] int prewarmCount = 20;
 
         private Queue<GameObject> objects = new Queue<GameObject>();
-        private Transform poolContainer = null;
+        private Transform poolContainer;
         /// <summary>
         /// Prewarms the pool with the specified prewarm Count on the GameObjectPool Scriptable Object
         /// </summary>
-        /// <param name="parentTransform">[Optional] The name of parent transform of the pooled objects</param>
-        public void Prewarm(string parentTransform = null)
+        /// <param name="prentTransformName">[Optional] If ignored, all pool objects will be grouped into one parent transform</param>
+        public void Prewarm(string prentTransformName = null)
         {
-            poolContainer = parentTransform == null ? new GameObject(name).transform : new GameObject(parentTransform).transform;
+            var pName = $"{name}- Pool";
+
+            if (prentTransformName == null)
+            {
+                var g = GameObject.Find(pName);
+                if (g == null)
+                {
+                    g = new GameObject(pName);
+                }
+                this.poolContainer = g.transform;
+            }
+            else
+            {
+                this.poolContainer = new GameObject($"{prentTransformName} - Pool").transform;
+            }
+
             AddObjects(prewarmCount);
         }
 
