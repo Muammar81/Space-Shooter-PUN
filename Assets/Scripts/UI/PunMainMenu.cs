@@ -1,51 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SpaceShooter.Events;
-using System;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using SpaceShooter.Events;
+using System;
 
-namespace SpaceShooter.UI
+public class PUNMainMenu : MonoBehaviourPunCallbacks
 {
-    public class PunMainMenu : MonoBehaviourPunCallbacks
+    private const string PLAYER_NAME = "PLAYER_NAME";
+
+    private void OnEnable()
     {
-        private const string PLAYER_NAME = "PLAYER_NAME";
+        base.OnEnable();
+        MenuEvents.OnStartGame += Handle_OnStartGame;
+    }
 
-        private void OnEnable()
-        {
-            base.OnEnable();
-            MenuEvents.OnStartGame += Handle_OnStartGame;
-        }
+    private void OnDisable()
+    {
+        base.OnDisable();
+        MenuEvents.OnStartGame -= Handle_OnStartGame;
+    }
 
-        private void OnDisable()
-        {
-            base.OnDisable();
-            MenuEvents.OnStartGame -= Handle_OnStartGame;
-        }
+    private void Handle_OnStartGame(string playerName)
+    {
+        Debug.Log($"Connecting as {playerName}...");
+        PlayerPrefs.SetString(PLAYER_NAME, playerName);
+        PhotonNetwork.ConnectUsingSettings();
+    }
 
-        private void Handle_OnStartGame(string playerName)
-        {
-            Debug.Log("Connecting...");
-            PlayerPrefs.SetString(PLAYER_NAME,playerName);
-            PhotonNetwork.ConnectUsingSettings();
-        }
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Connected. Joining Lobby...");
+        PhotonNetwork.JoinLobby();
+    }
 
-        public override void OnConnectedToMaster()
-        {
-            Debug.Log("Connected. Joining Default Lobby...");
-            PhotonNetwork.JoinLobby();
-        }
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("Lobby joined, Joining Room...");
+        PhotonNetwork.JoinRandomOrCreateRoom();
+    }
 
-        public override void OnJoinedLobby()
-        {
-            Debug.Log("Lobby Joined, joining Room...");
-            PhotonNetwork.JoinRandomOrCreateRoom();
-        }
-
-        public override void OnJoinedRoom()
-        {
-            SceneManager.LoadScene(1);
-        }
+    public override void OnJoinedRoom()
+    {
+        SceneManager.LoadScene(1);
     }
 }

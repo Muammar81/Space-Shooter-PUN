@@ -784,7 +784,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 456049681}
-  - component: {fileID: 456049680}
+  - component: {fileID: 456049683}
   - component: {fileID: 456049682}
   m_Layer: 0
   m_Name: Main Menu
@@ -793,20 +793,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &456049680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 456049679}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edae7306e3f30ab41bdc5b566371677d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  btnStartGame: {fileID: 139498656}
-  txtPlayerName: {fileID: 1427069573}
 --- !u!4 &456049681
 Transform:
   m_ObjectHideFlags: 0
@@ -835,6 +821,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53e1530eb2e4bb54b9b5d6df863ccc4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &456049683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456049679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f94c236567e9fc649bd3fc5fa31ba116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  btnStartGame: {fileID: 139498656}
+  txtPlayerName: {fileID: 1427069573}
 --- !u!1 &463446641
 GameObject:
   m_ObjectHideFlags: 0
