@@ -14,7 +14,7 @@ namespace PanettoneGames.Poseidon.Utilities
 
         public static Action<AudioClip> OnFire = delegate { };
         protected float timer;
-        private void Awake() => pool.Prewarm(transform.name);
+        private void Awake() => pool.Prewarm();
         public void SetPool(GameObjectPool poolAsset) => this.pool = poolAsset;
         public void SetFirePoint()
         {

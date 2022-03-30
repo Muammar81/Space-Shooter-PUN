@@ -24,7 +24,8 @@ namespace SpaceShooter.UI
 
         private void OnStartGame()
         {
-            MenuEvents.OnStartGame?.Invoke(txtPlayerName.text);
+            var pName = txtPlayerName.text;
+            MenuEvents.OnStartGame?.Invoke(pName);
         }
     }
 }

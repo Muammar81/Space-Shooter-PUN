@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 9152451944232702670}
   - component: {fileID: 5104600273878113356}
   - component: {fileID: 303782116}
+  - component: {fileID: 4695148153898123381}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -303,6 +304,8 @@ MonoBehaviour:
   moveSpeed: 2
   rotationSpeed: 15
   stoppingDistance: 5
+  remoteRotSmooth: 10
+  remoteMoveSmooth: 5
 --- !u!114 &303782116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,3 +324,25 @@ MonoBehaviour:
   - {fileID: 721633319792625265}
   - {fileID: 6611891915723582404}
   sFX: {fileID: 8300000, guid: bdeffdecd3b6f9b4b8ba4dc36690ec5e, type: 3}
+--- !u!114 &4695148153898123381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6649183620923929243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
