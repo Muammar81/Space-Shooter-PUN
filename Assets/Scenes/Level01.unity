@@ -460,6 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 935772946}
   - component: {fileID: 935772945}
+  - component: {fileID: 935772947}
   m_Layer: 0
   m_Name: Connection Manager
   m_TagString: Untagged
@@ -494,6 +495,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &935772947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 935772944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1162206173
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,13 +618,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1253117992}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 407321699e19ce8499264964025f4ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   astroidPrefab: {fileID: 3941682199655648940, guid: a986c2f923e826040b67889213dcc9e9, type: 3}
-  spawnDelay: 3
+  spawnDelay: 0.5
 --- !u!61 &1253117994
 BoxCollider2D:
   m_ObjectHideFlags: 0

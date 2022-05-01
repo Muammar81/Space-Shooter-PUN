@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3941682199655648943}
   - component: {fileID: 3941682199655648942}
   - component: {fileID: 3941682199655648941}
-  m_Layer: 0
+  - component: {fileID: 7393399219251953424}
+  m_Layer: 7
   m_Name: Astroid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,4 +98,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15a9108c9bcff3a42aba5f5761d2f2d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchSpeed: 20
+  launchSpeed: 5
+--- !u!58 &7393399219251953424
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3941682199655648940}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.49
