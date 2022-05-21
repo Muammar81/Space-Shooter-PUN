@@ -76,6 +76,7 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
         }
     }
 
+    //Received by all enemies in the scene
     public void NetworkingClient_EventReceived(EventData e)
     {
         if (e.Code != (byte)PunEventHelper.PunEvents.PLAYER_SPAWNED)
@@ -89,7 +90,9 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
         if(pv.TryGetComponent(out PlayerMovement p))
         {
             print($"ID: {playerVid}, Name: {playerNick} was spawned");
-            Player = pv.transform;
+
+            if(Random.Range(0,100)>50)
+                Player = pv.transform;
         }
     }
 }
