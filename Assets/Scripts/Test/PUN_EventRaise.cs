@@ -21,7 +21,8 @@ public class PUN_EventRaise : MonoBehaviourPun
             Receivers = ReceiverGroup.All
         };
 
-        PhotonNetwork.RaiseEvent((byte)MyNetworkEvents.SEND_TEXT, dataPacket, eventOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PunEventHelper.PunEvents.PLAYER_SPAWNED, dataPacket, eventOptions, SendOptions.SendReliable);
     }
 }
-public enum MyNetworkEvents { SEND_TEXT, SEND_EMOTE }
+
+

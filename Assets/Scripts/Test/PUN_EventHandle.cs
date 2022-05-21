@@ -1,26 +1,21 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
-using System;
 using UnityEngine;
 
-public class PUN_EventHandle : MonoBehaviour
+public class PUN_EventHandle : MonoBehaviour, IPunEventReceiver
 {
-    private void OnEnable()
-    {
-        string eventName = Enum.GetName(typeof(MyNetworkEvents), MyNetworkEvents.SEND_TEXT);
-        PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
-    }
-
+    private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
     private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
 
-    private void NetworkingClient_EventReceived(EventData obj)
+    public void NetworkingClient_EventReceived(EventData e)
     {
-        if (obj.Code == (byte)MyNetworkEvents.SEND_TEXT)
+        if (e.Code == (byte)PunEventHelper.PunEvents.PLAYER_SPAWNED)
         {
-            object[] dataPacket = (object[])obj.CustomData;
-            string playerNickName = (string)dataPacket[0].ToString();
-            string txt = (string)dataPacket[1].ToString();
-            Debug.Log($"{txt} Received from {playerNickName}");
+            object[] dataPacket = (object[])e.CustomData;
         }
     }
 }
+
+
+
+

@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
@@ -13,7 +14,6 @@ public class SpawnManager : MonoBehaviourPunCallbacks
 
     private GameObject playerObject;
 
-    public static event Action<GameObject, Player> OnPlayerSpawned = delegate { };
     private void Start()
     {
         if (!PhotonNetwork.IsConnected) return;
@@ -49,11 +49,18 @@ public class SpawnManager : MonoBehaviourPunCallbacks
         if (player.IsLocal)
         {
             playerObject.transform.name += " - Mine";
+            PunEventHelper.RiseEvent( PunEventHelper.PunEvents.PLAYER_SPAWNED);
         }
 
-        //OnPlayerSpawned?.Invoke(playerObject, playerObject.GetComponent<PhotonView>().Owner);
         #if UNITY_EDITOR
         Selection.activeGameObject = playerObject;
         #endif
     }
 }
+
+
+
+
+
+
+

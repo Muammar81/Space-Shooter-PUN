@@ -1,13 +1,14 @@
 using UnityEngine;
 using Photon.Pun;
+using ExitGames.Client.Photon;
 
-public class EnemyAI : MonoBehaviourPun, IPunObservable
+public class EnemyAI : MonoBehaviourPun, IPunObservable, IPunEventReceiver
 {
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float rotationSpeed = 15f;
     [SerializeField] private float stoppingDistance = 5;
 
-    [Header("Remote Smoothign")]
+    [Header("Remote Smoothing")]
     [SerializeField] private float remoteRotSmooth = 10;
     [SerializeField] private float remoteMoveSmooth = 5;
     private Vector3 otherPlayerPosition;
@@ -16,6 +17,8 @@ public class EnemyAI : MonoBehaviourPun, IPunObservable
     private float rotationOffset = -90;
     private Transform player;
 
+    private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+    private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
     private void Start() => player = FindObjectOfType<PlayerMovement>().gameObject.transform;
 
     void Update()
@@ -63,4 +66,21 @@ public class EnemyAI : MonoBehaviourPun, IPunObservable
             otherPlayerRotation = (Quaternion)stream.ReceiveNext();
         }
     }
+
+    public void NetworkingClient_EventReceived(EventData e)
+    {
+        if (e.Code == (byte)PunEventHelper.PunEvents.PLAYER_SPAWNED)
+        {
+            var pid = e.Sender;
+            var pv = PhotonView.Find(pid);
+
+            print($"attacking {pv.Owner.NickName}");
+            player = pv.transform;
+
+            //object[] dataPacket = (object[])e.CustomData;
+            //print(dataPacket[0]?.ToString());
+        }
+    }
 }
+
+
