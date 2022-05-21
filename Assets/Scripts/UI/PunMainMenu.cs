@@ -54,12 +54,18 @@ public class PUNMainMenu : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        print($"Joined room: {PhotonNetwork.CurrentRoom.Name}");
+
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         _playerName = String.IsNullOrEmpty(_playerName) ?
             $"Player {playerCount}" : _playerName;
 
         PhotonNetwork.NickName = _playerName;
+        print($"Connected as {_playerName}.");
+
         PlayerPrefs.SetString(PLAYER_NAME, _playerName);
+
+        print($"Loading level 1...");
         PhotonNetwork.LoadLevel(1);
     }
 }
