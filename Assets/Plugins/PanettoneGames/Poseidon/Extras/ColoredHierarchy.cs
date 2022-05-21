@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [InitializeOnLoad]
 public class ColoredHierarchy : MonoBehaviour
 {
@@ -102,3 +103,4 @@ public class ColoredHierarchy : MonoBehaviour
         GUI.Label(r, icon);
     }
 }
+#endif

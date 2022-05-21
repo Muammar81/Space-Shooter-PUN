@@ -1,36 +1,33 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SpawnManager : MonoBehaviourPunCallbacks
+public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] List<PhotonView> playerPrefabs;
-    [SerializeField] PhotonView enemyPrefab;
+    [SerializeField] private List<PhotonView> playerPrefabs;
+    [SerializeField] private PhotonView enemyPrefab;
 
     private GameObject playerObject;
 
     private void Start()
     {
-        if (!PhotonNetwork.IsConnected) return;
+        if (!PhotonNetwork.IsConnected)
+            return;
 
         SpawnPlayer();
 
         if (PhotonNetwork.IsMasterClient)
-        {
             SpawnEnemies(3);
-        }
     }
 
     private void SpawnEnemies(int enemiesCount)
     {
         for (int i = 0; i < enemiesCount; i++)
         {
-            var enemyObject = PhotonNetwork.InstantiateRoomObject(enemyPrefab.name, transform.position, transform.rotation);
+            GameObject enemyObject = PhotonNetwork.InstantiateRoomObject(enemyPrefab.name, transform.position, transform.rotation);
             enemyObject.transform.position = Random.insideUnitCircle * 5;
         }
     }
@@ -39,17 +36,19 @@ public class SpawnManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Spawning Player");
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        var playerPrefab = playerPrefabs[playerCount-1]; //careful for number of players
+        PhotonView playerPrefab = playerPrefabs[playerCount - 1]; //careful for number of players
         playerObject = PhotonNetwork.Instantiate(playerPrefab.name, transform.position, transform.rotation);
         playerObject.transform.SetParent(transform);
 
-        var player = playerObject.GetPhotonView().Owner;
-        playerObject.transform.name = $"{player.NickName} - Player ({playerCount})";
+        var player = playerObject.GetPhotonView();
+        playerObject.transform.name = $"{player.name} - Player ({playerCount})";
 
-        if (player.IsLocal)
+        if (player.IsMine)
         {
             playerObject.transform.name += " - Mine";
-            PunEventHelper.RiseEvent( PunEventHelper.PunEvents.PLAYER_SPAWNED);
+
+            object[] dataPacket = new object[] { player.ViewID, PhotonNetwork.NickName};
+            PunEventHelper.RiseEvent(PunEventHelper.PunEvents.PLAYER_SPAWNED, dataPacket);
         }
 
         #if UNITY_EDITOR
@@ -57,10 +56,3 @@ public class SpawnManager : MonoBehaviourPunCallbacks
         #endif
     }
 }
-
-
-
-
-
-
-

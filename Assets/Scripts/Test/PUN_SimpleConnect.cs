@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine.SceneManagement;
 
 public class PUN_SimpleConnect : MonoBehaviourPunCallbacks

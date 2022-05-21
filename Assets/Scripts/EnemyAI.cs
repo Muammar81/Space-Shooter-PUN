@@ -1,8 +1,9 @@
 using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
+using Photon.Realtime;
 
-public class EnemyAI : MonoBehaviourPun, IPunObservable, IPunEventReceiver
+public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventReceiver
 {
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float rotationSpeed = 15f;
@@ -15,34 +16,31 @@ public class EnemyAI : MonoBehaviourPun, IPunObservable, IPunEventReceiver
     private Quaternion otherPlayerRotation;
 
     private float rotationOffset = -90;
-    private Transform player;
+    public Transform Player { get; set; }
 
     private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
     private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
-    private void Start() => player = FindObjectOfType<PlayerMovement>().gameObject.transform;
+
+    private void Start() => Player = FindObjectOfType<PlayerMovement>().gameObject.transform;
 
     void Update()
     {
-        if (player == null) return;
+        if (Player == null) return;
 
         if (photonView.IsMine)
-        {
             Move();
-        }
         else
-        {
             MoveNetwork();
-        }
     }
 
     private void Move()
     {
-        var direction = (player.position - transform.position).normalized;
+        var direction = (Player.position - transform.position).normalized;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         var targetRotation = Quaternion.Euler(Vector3.forward * (targetAngle + rotationOffset));
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
-        var currentDistance = (player.position - transform.position).sqrMagnitude;
+        var currentDistance = (Player.position - transform.position).sqrMagnitude;
         if (currentDistance > stoppingDistance)
         {
             transform.position += direction * moveSpeed * Time.deltaTime;
@@ -67,18 +65,31 @@ public class EnemyAI : MonoBehaviourPun, IPunObservable, IPunEventReceiver
         }
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        
+        var pv = PhotonView.Find(newPlayer.ActorNumber);
+        if (pv.TryGetComponent(out PlayerMovement playerMove))
+        {
+            print($"Attacking {pv.name}");
+            Player = pv.transform;
+        }
+    }
+
     public void NetworkingClient_EventReceived(EventData e)
     {
-        if (e.Code == (byte)PunEventHelper.PunEvents.PLAYER_SPAWNED)
+        if (e.Code != (byte)PunEventHelper.PunEvents.PLAYER_SPAWNED)
+            return;
+
+        object[] dataPacket = (object[])e.CustomData;
+        var playerVid = (int) dataPacket[0];
+        var playerNick = dataPacket[1].ToString();
+
+        var pv = PhotonView.Find(playerVid);
+        if(pv.TryGetComponent(out PlayerMovement p))
         {
-            var pid = e.Sender;
-            var pv = PhotonView.Find(pid);
-
-            print($"attacking {pv.Owner.NickName}");
-            player = pv.transform;
-
-            //object[] dataPacket = (object[])e.CustomData;
-            //print(dataPacket[0]?.ToString());
+            print($"ID: {playerVid}, Name: {playerNick} was spawned");
+            Player = pv.transform;
         }
     }
 }
