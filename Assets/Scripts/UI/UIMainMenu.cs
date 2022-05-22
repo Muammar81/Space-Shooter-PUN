@@ -19,7 +19,8 @@ namespace SpaceShooter.UI
         {
             var playerName = PlayerPrefs.GetString(PLAYER_NAME, Environment.UserName);
             txtPlayerName.text = playerName;
-            //Debug.Log(txtPlayerName.text);
+            txtPlayerName.onFocusSelectAll = true;
+            txtPlayerName.Select();
         }
 
         private void OnStartGame()

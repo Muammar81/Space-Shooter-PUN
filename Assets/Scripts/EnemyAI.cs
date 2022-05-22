@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
+using System.Collections;
 
 public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventReceiver
 {
@@ -14,18 +15,23 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
     [SerializeField] private float remoteMoveSmooth = 5;
     private Vector3 otherPlayerPosition;
     private Quaternion otherPlayerRotation;
-
     private float rotationOffset = -90;
-    public Transform Player { get; set; }
+
+    private PlayerMovement[] allPlayers;
+    private Transform targetPlayer;
 
     private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
     private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
 
-    private void Start() => Player = FindObjectOfType<PlayerMovement>().gameObject.transform;
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(1);
+        PickTargetPlayer();
+    }
 
     void Update()
     {
-        if (Player == null) return;
+        if (targetPlayer == null) return;
 
         if (photonView.IsMine)
             Move();
@@ -33,14 +39,22 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
             MoveNetwork();
     }
 
+    private void PickTargetPlayer()
+    {
+        allPlayers = FindObjectsOfType<PlayerMovement>();
+
+        var index =  Random.Range(0, allPlayers.Length - 1);
+        targetPlayer = allPlayers[index].transform;
+    }
+
     private void Move()
     {
-        var direction = (Player.position - transform.position).normalized;
+        var direction = (targetPlayer.position - transform.position).normalized;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         var targetRotation = Quaternion.Euler(Vector3.forward * (targetAngle + rotationOffset));
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
-        var currentDistance = (Player.position - transform.position).sqrMagnitude;
+        var currentDistance = (targetPlayer.position - transform.position).sqrMagnitude;
         if (currentDistance > stoppingDistance)
         {
             transform.position += direction * moveSpeed * Time.deltaTime;
@@ -65,16 +79,8 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        
-        var pv = PhotonView.Find(newPlayer.ActorNumber);
-        if (pv.TryGetComponent(out PlayerMovement playerMove))
-        {
-            print($"Attacking {pv.name}");
-            Player = pv.transform;
-        }
-    }
+
+
 
     //Received by all enemies in the scene
     public void NetworkingClient_EventReceived(EventData e)
@@ -83,18 +89,24 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
             return;
 
         object[] dataPacket = (object[])e.CustomData;
+        if (dataPacket == null) return;
+
         var playerVid = (int) dataPacket[0];
         var playerNick = dataPacket[1].ToString();
 
         var pv = PhotonView.Find(playerVid);
         if(pv.TryGetComponent(out PlayerMovement p))
         {
-            print($"ID: {playerVid}, Name: {playerNick} was spawned");
+            //print($"ID: {playerVid}, Name: {playerNick} was spawned");
 
-            if(Random.Range(0,100)>50)
-                Player = pv.transform;
+            //if(Random.Range(0,100)>=50)
+                targetPlayer = pv.transform;
         }
     }
+
+    //Callbacks
+    public override void OnPlayerEnteredRoom(Player newPlayer) => Debug.Log($"{newPlayer.NickName} joined. Total in room:{PhotonNetwork.CurrentRoom.PlayerCount}");
+    public override void OnPlayerLeftRoom(Player otherPlayer) => Debug.Log($"{otherPlayer.NickName} left. Total in room:{PhotonNetwork.CurrentRoom.PlayerCount}");
 }
 
 
