@@ -62,4 +62,5 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable
             otherPlayerRotation = (Quaternion)stream.ReceiveNext();
         }
     }
+
 }

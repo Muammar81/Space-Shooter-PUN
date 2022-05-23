@@ -17,17 +17,27 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
     private Quaternion otherPlayerRotation;
     private float rotationOffset = -90;
 
-    private PlayerMovement[] allPlayers;
     private Transform targetPlayer;
 
-    private void OnEnable() => PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
-    private void OnDisable() => PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+    private void OnEnable()
+    {
+        base.OnEnable();
+        PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+    }
+
+    private void OnDisable()
+    {
+        base.OnDisable();
+        PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+    }
 
     private IEnumerator Start()
     {
         yield return new WaitForSeconds(1);
-        PickTargetPlayer();
+        FindTargetPlayer();
     }
+
+
 
     void Update()
     {
@@ -37,14 +47,6 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
             Move();
         else
             MoveNetwork();
-    }
-
-    private void PickTargetPlayer()
-    {
-        allPlayers = FindObjectsOfType<PlayerMovement>();
-
-        var index =  Random.Range(0, allPlayers.Length - 1);
-        targetPlayer = allPlayers[index].transform;
     }
 
     private void Move()
@@ -79,9 +81,6 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
         }
     }
 
-
-
-
     //Received by all enemies in the scene
     public void NetworkingClient_EventReceived(EventData e)
     {
@@ -97,16 +96,31 @@ public class EnemyAI : MonoBehaviourPunCallbacks, IPunObservable, IPunEventRecei
         var pv = PhotonView.Find(playerVid);
         if(pv.TryGetComponent(out PlayerMovement p))
         {
-            //print($"ID: {playerVid}, Name: {playerNick} was spawned");
-
-            //if(Random.Range(0,100)>=50)
+            print($"ID: {playerVid}, Name: {playerNick} was spawned");
+            if(Random.Range(0,100)>=50)
                 targetPlayer = pv.transform;
         }
     }
 
+    private void FindTargetPlayer()
+    {
+        var allPlayers = FindObjectsOfType<PlayerMovement>();
+        int index = allPlayers.Length - 1;// Random.Range(0, allPlayers.Length - 1);
+        Debug.Log($"Chasing{index} out of {allPlayers.Length}");
+        targetPlayer = allPlayers[index].transform;
+    }
+
     //Callbacks
-    public override void OnPlayerEnteredRoom(Player newPlayer) => Debug.Log($"{newPlayer.NickName} joined. Total in room:{PhotonNetwork.CurrentRoom.PlayerCount}");
-    public override void OnPlayerLeftRoom(Player otherPlayer) => Debug.Log($"{otherPlayer.NickName} left. Total in room:{PhotonNetwork.CurrentRoom.PlayerCount}");
+    //public override void OnPlayerEnteredRoom(Player newPlayer)
+    //{
+    //    Debug.Log($"{newPlayer.NickName} entered room", this);
+    //    FindTargetPlayer();
+    //}
+    //public override void OnPlayerLeftRoom(Player otherPlayer)
+    //{
+    //    Debug.Log($"{otherPlayer.NickName} left. picking new player as target...", this);
+    //    FindTargetPlayer();
+    //}
 }
 
 
